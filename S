@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resell AI V2</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#080a0f;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,textarea,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:240px;
+  background:#10131a;
+  border-right:1px solid #252a35;
+  position:fixed;
+  inset:0 auto 0 0;
+  padding:24px 15px;
+  z-index:10;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:800;
+  margin:5px 10px 35px;
+}
+
+.logo span{
+  color:#7180ff;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nav button{
+  background:transparent;
+  border:0;
+  color:#9299a8;
+  padding:13px 14px;
+  border-radius:10px;
+  text-align:left;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#1d2230;
+  color:white;
+}
+
+/* MAIN */
+
+.main{
+  margin-left:240px;
+  width:calc(100% - 240px);
+  padding:30px;
+}
+
+.page{
+  display:none;
+  max-width:1250px;
+  margin:auto;
+}
+
+.page.active{
+  display:block;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+h1{
+  font-size:30px;
+}
+
+.sub{
+  color:#858c9b;
+  margin-top:5px;
+}
+
+.status{
+  padding:7px 12px;
+  border-radius:20px;
+  background:#14251b;
+  color:#61df93;
+  font-size:12px;
+}
+
+/* CARDS */
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card,
+.panel,
+.product{
+  background:#11141b;
+  border:1px solid #252a35;
+  border-radius:15px;
+}
+
+.card{
+  padding:19px;
+}
+
+.label{
+  font-size:12px;
+  color:#858c9b;
+  margin-bottom:8px;
+}
+
+.value{
+  font-size:27px;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.panel{
+  padding:20px;
+}
+
+.panel h2{
+  font-size:19px;
+  margin-bottom:17px;
+}
+
+/* INPUTS */
+
+input,
+textarea,
+select{
+  width:100%;
+  background:#090b10;
+  color:#fff;
+  border:1px solid #303642;
+  border-radius:9px;
+  padding:12px;
+  outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#6876ff;
+}
+
+.form{
+  margin-bottom:14px;
+}
+
+.form label{
+  display:block;
+  color:#969daa;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+/* BUTTONS */
+
+.btn{
+  background:#6876ff;
+  color:white;
+  border:0;
+  border-radius:9px;
+  padding:11px 16px;
+  font-weight:700;
+}
+
+.btn:hover{
+  filter:brightness(1.1);
+}
+
+.btn.secondary{
+  background:#252b38;
+}
+
+.btn.danger{
+  background:#7b2931;
+}
+
+.full{
+  width:100%;
+}
+
+/* RESULTS */
+
+.result{
+  margin-top:16px;
+  padding:17px;
+  border-radius:12px;
+  background:#0d1711;
+  border:1px solid #245034;
+}
+
+.green{
+  color:#61e393;
+}
+
+.red{
+  color:#ff6666;
+}
+
+/* PRODUCTS */
+
+.products{
+  display:grid;
+  gap:13px;
+}
+
+.product{
+  padding:17px;
+}
+
+.product-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:10px;
+}
+
+.product-name{
+  font-weight:750;
+  font-size:16px;
+}
+
+.product-desc{
+  font-size:13px;
+  color:#9aa1ae;
+  line-height:1.55;
+}
+
+.product-data{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+
+.data{
+  background:#0a0d12;
+  border-radius:8px;
+  padding:10px;
+}
+
+.data small{
+  display:block;
+  color:#747c8b;
+  font-size:10px;
+}
+
+.data strong{
+  display:block;
+  margin-top:3px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+a.btn{
+  text-decoration:none;
+  display:inline-block;
+}
+
+.badge{
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:20px;
+  background:#202635;
+  color:#aeb7ff;
+}
+
+.score{
+  color:#61e393;
+  font-weight:800;
+}
+
+/* CHAT */
+
+.chat{
+  height:480px;
+  display:flex;
+  flex-direction:column;
+}
+
+.messages{
+  flex:1;
+  overflow:auto;
+  margin-bottom:12px;
+}
+
+.msg{
+  padding:12px 14px;
+  border-radius:11px;
+  margin-bottom:9px;
+  max-width:85%;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.ai{
+  background:#1b202b;
+}
+
+.user{
+  background:#5361df;
+  margin-left:auto;
+}
+
+.chatrow{
+  display:flex;
+  gap:8px;
+}
+
+.chatrow input{
+  flex:1;
+}
+
+/* SETTINGS */
+
+.setting-row{
+  padding:15px 0;
+  border-bottom:1px solid #292e38;
+}
+
+.note{
+  font-size:12px;
+  color:#777f8e;
+  line-height:1.5;
+  margin-top:12px;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media(max-width:850px){
+
+  .sidebar{
+    width:120px;
+    padding:20px 8px;
+  }
+
+  .logo{
+    font-size:20px;
+    text-align:center;
+    margin:5px 0 25px;
+  }
+
+  .logo span{
+    font-size:20px;
+  }
+
+  .nav{
+    gap:5px;
+  }
+
+  .nav button{
+    font-size:13px;
+    text-align:left;
+    padding:12px 8px;
+    white-space:nowrap;
+    color:#9299a8;
+  }
+
+  .main{
+    margin-left:120px;
+    width:calc(100% - 120px);
+    padding:17px;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .product-data{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+
+/* SMALL PHONE */
+
+@media(max-width:500px){
+
+  .sidebar{
+    width:105px;
+    padding:18px 6px;
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  .logo span{
+    font-size:18px;
+  }
+
+  .nav button{
+    font-size:11px;
+    padding:11px 6px;
+  }
+
+  .main{
+    margin-left:105px;
+    width:calc(100% - 105px);
+    padding:13px;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .product-data{
+    grid-template-columns:1fr 1fr;
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+  <div class="logo">
+    Resell <span>AI</span>
+  </div>
+
+  <nav class="nav">
+
+    <button class="active"
+      onclick="openPage('dashboard',this)">
+      🏠 Hub
+    </button>
+
+    <button onclick="openPage('research',this)">
+      🔎 Recherche
+    </button>
+
+    <button onclick="openPage('products',this)">
+      📦 Produkte
+    </button>
+
+    <button onclick="openPage('calculator',this)">
+      💰 Gewinn
+    </button>
+
+    <button onclick="openPage('content',this)">
+      🎬 Video-Ads
+    </button>
+
+    <button onclick="openPage('assistant',this)">
+      🤖 KI
+    </button>
+
+    <button onclick="openPage('settings',this)">
+      ⚙️ Einstellungen
+    </button>
+
+  </nav>
+
+</aside>
+
+
+<main class="main">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="page active">
+
+  <div class="top">
+
+    <div>
+      <h1>Dashboard</h1>
+      <div class="sub">
+        Dein Reselling-Zentrum
+      </div>
+    </div>
+
+    <div class="status">
+      ● Online
+    </div>
+
+  </div>
+
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="label">Umsatz</div>
+      <div class="value" id="dashRevenue">
+        0,00 €
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Gewinn</div>
+      <div class="value green" id="dashProfit">
+        0,00 €
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Verkäufe</div>
+      <div class="value" id="dashSales">
+        0
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Budget</div>
+      <div class="value" id="dashBudget">
+        50,00 €
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="grid">
+
+
+    <div class="panel">
+
+      <h2>🚀 Produkte mit Potenzial</h2>
+
+      <div id="dashboardProducts"
+           class="products">
+      </div>
+
+    </div>
+
+
+    <div class="panel">
+
+      <h2>⚡ Schnellrechner</h2>
+
+      <div class="form">
+        <label>Einkauf</label>
+        <input id="qBuy"
+               type="number"
+               value="10"
+               step=".01">
+      </div>
+
+      <div class="form">
+        <label>Verkauf</label>
+        <input id="qSell"
+               type="number"
+               value="30"
+               step=".01">
+      </div>
+
+      <div class="form">
+        <label>Versand</label>
+        <input id="qShip"
+               type="number"
+               value="3"
+               step=".01">
+      </div>
+
+      <div class="form">
+        <label>Gebühren</label>
+        <input id="qFees"
+               type="number"
+               value="2"
+               step=".01">
+      </div>
+
+      <button class="btn full"
+              onclick="quickCalc()">
+        Gewinn berechnen
+      </button>
+
+      <div class="result">
+
+        <div class="label">
+          Gewinn pro Verkauf
+        </div>
+
+        <div class="value green"
+             id="qProfit">
+          15,00 €
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= RESEARCH ================= -->
+
+<section id="research" class="page">
+
+  <div class="top">
+
+    <div>
+      <h1>🔎 Produkt-Recherche</h1>
+
+      <div class="sub">
+        Produkte suchen und prüfen
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <div class="grid">
+
+      <div>
+
+        <div class="form">
+          <label>
+            Was möchtest du suchen?
+          </label>
+
+          <input id="researchQuery"
+                 placeholder="z. B. Gaming Zubehör">
+        </div>
+
+
+        <div class="form">
+          <label>
+            Maximaler Einkaufspreis
+          </label>
+
+          <input id="researchMax"
+                 type="number"
+                 value="15">
+        </div>
+
+
+        <div class="form">
+          <label>
+            Ziel-Verkaufspreis
+          </label>
+
+          <input id="researchSell"
+                 type="number"
+                 value="30">
+        </div>
+
+
+        <button class="btn full"
+                onclick="searchProducts()">
+
+          🔎 Potenzielle Produkte finden
+
+        </button>
+
+
+        <p class="note">
+
+          Die aktuelle Version nutzt zunächst
+          lokale Beispieldaten.
+
+          Für echte Live-Preise und aktuelle Anbieter
+          kommt anschließend eine sichere Recherche-API.
+
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <h2>Suchlogik</h2>
+
+        <p class="product-desc">
+
+          Resell AI berücksichtigt später:
+
+          <br><br>
+
+          ✓ Einkaufspreis<br>
+          ✓ Verkaufspreis<br>
+          ✓ Versand<br>
+          ✓ Gebühren<br>
+          ✓ Gewinn<br>
+          ✓ Marge<br>
+          ✓ Nachfrage<br>
+          ✓ Konkurrenz<br>
+          ✓ Trend-Signale<br>
+          ✓ Video-Potenzial
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <br>
+
+  <div id="researchResults"
+       class="products">
+  </div>
+
+</section>
+
+
+<!-- ================= PRODUCTS ================= -->
+
+<section id="products" class="page">
+
+  <div class="top">
+
+    <div>
+
+      <h1>📦 Meine Produkte</h1>
+
+      <div class="sub">
+        Gespeicherte Produkte
+      </div>
+
+    </div>
+
+
+    <button class="btn"
+            onclick="addProduct()">
+
+      + Produkt
+
+    </button>
+
+  </div>
+
+
+  <div id="productList"
+       class="products">
+  </div>
+
+</section>
+
+
+<!-- ================= CALCULATOR ================= -->
+
+<section id="calculator" class="page">
+
+  <div class="top">
+
+    <h1>💰 Gewinn-Rechner</h1>
+
+  </div>
+
+
+  <div class="panel">
+
+    <div class="grid">
+
+
+      <div>
+
+        <div class="form">
+          <label>Einkaufspreis</label>
+
+          <input id="cBuy"
+                 type="number"
+                 value="10"
+                 step=".01">
+        </div>
+
+
+        <div class="form">
+          <label>Verkaufspreis</label>
+
+          <input id="cSell"
+                 type="number"
+                 value="30"
+                 step=".01">
+        </div>
+
+
+        <div class="form">
+          <label>Versand</label>
+
+          <input id="cShip"
+                 type="number"
+                 value="3"
+                 step=".01">
+        </div>
+
+
+        <div class="form">
+          <label>Gebühren</label>
+
+          <input id="cFees"
+                 type="number"
+                 value="2"
+                 step=".01">
+        </div>
+
+
+        <div class="form">
+          <label>Anzahl Verkäufe</label>
+
+          <input id="cQty"
+                 type="number"
+                 value="1">
+        </div>
+
+
+        <button class="btn full"
+                onclick="calculate()">
+
+          Berechnen
+
+        </button>
+
+      </div>
+
+
+      <div class="result">
+
+        <div class="label">
+          Gewinn pro Stück
+        </div>
+
+        <div class="value green"
+             id="cProfit">
+          15,00 €
+        </div>
+
+        <br>
+
+        <div>
+          Gesamtgewinn:
+          <strong id="cTotal">
+            15,00 €
+          </strong>
+        </div>
+
+        <br>
+
+        <div>
+          Umsatz:
+          <strong id="cRevenue">
+            30,00 €
+          </strong>
+        </div>
+
+        <br>
+
+        <div>
+          Marge:
+          <strong id="cMargin">
+            50 %
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CONTENT ================= -->
+
+<section id="content" class="page">
+
+  <div class="top">
+
+    <div>
+
+      <h1>🎬 Video-Ads</h1>
+
+      <div class="sub">
+        Erstelle automatisch ein Werbekonzept
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="grid">
+
+
+    <div class="panel">
+
+      <div class="form">
+
+        <label>Produkt</label>
+
+        <input id="adProduct"
+               placeholder="z. B. Gaming Headset-Ständer">
+
+      </div>
+
+
+      <div class="form">
+
+        <label>Zielgruppe</label>
+
+        <input id="adAudience"
+               value="Gamer">
+
+      </div>
+
+
+      <div class="form">
+
+        <label>Plattform</label>
+
+        <select id="adPlatform">
+
+          <option>TikTok</option>
+          <option>Instagram Reels</option>
+          <option>YouTube Shorts</option>
+
+        </select>
+
+      </div>
+
+
+      <button class="btn full"
+              onclick="makeAd()">
+
+        🎬 Ad erstellen
+
+      </button>
+
+    </div>
+
+
+    <div class="panel">
+
+      <h2>Ad-Konzept</h2>
+
+      <div id="adResult">
+
+        <p class="product-desc">
+          Noch kein Konzept erstellt.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= AI ================= -->
+
+<section id="assistant" class="page">
+
+  <div class="top">
+
+    <div>
+
+      <h1>🤖 Resell AI</h1>
+
+      <div class="sub">
+        Business-Assistent
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="panel chat">
+
+    <div id="messages"
+         class="messages">
+
+      <div class="msg ai">
+
+        👋 Ich bin Resell AI V2.
+
+        <br><br>
+
+        Frag mich zum Beispiel nach Gewinn,
+        Produktideen oder Video-Konzepten.
+
+      </div>
+
+    </div>
+
+
+    <div class="chatrow">
+
+      <input id="chatInput"
+             placeholder="Frag Resell AI..."
+             onkeydown="if(event.key==='Enter')sendChat()">
+
+      <button class="btn"
+              onclick="sendChat()">
+
+        Senden
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= SETTINGS ================= -->
+
+<section id="settings" class="page">
+
+  <div class="top">
+
+    <h1>⚙️ Einstellungen</h1>
+
+  </div>
+
+
+  <div class="panel">
+
+
+    <div class="setting-row">
+
+      <div class="form">
+
+        <label>
+          Startbudget
+        </label>
+
+        <input id="setBudget"
+               type="number"
+               value="50">
+
+      </div>
+
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="form">
+
+        <label>
+          Monatliches Budget
+        </label>
+
+        <input id="setMonthly"
+               type="number"
+               value="10">
+
+      </div>
+
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="form">
+
+        <label>
+          Mindestgewinn pro Verkauf
+        </label>
+
+        <input id="setMinProfit"
+               type="number"
+               value="5">
+
+      </div>
+
+    </div>
+
+
+    <button class="btn"
+            onclick="saveSettings()">
+
+      Speichern
+
+    </button>
+
+
+    <br><br>
+
+
+    <button class="btn danger"
+            onclick="resetAll()">
+
+      Alles zurücksetzen
+
+    </button>
+
+  </div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   RESSELL AI V2
+   ========================================= */
+
+let state = {
+
+  budget:50,
+  monthly:10,
+  minProfit:5,
+  revenue:0,
+  profit:0,
+  sales:0
+
+};
+
+
+/* DEMO-PRODUKTE */
+
+let products = [
+
+  {
+    name:"RGB Headset-Ständer",
+    buy:18.99,
+    sell:34.99,
+    shipping:3,
+    fees:2,
+    source:"Amazon / Händler",
+    url:"https://www.amazon.de/s?k=RGB+Headset+St%C3%A4nder",
+    why:"Gaming-Zubehör lässt sich visuell gut demonstrieren.",
+    ad:"Vorher/Nachher-Schreibtisch-Setup"
+  },
+
+  {
+    name:"Magnetischer Handy-Kühler",
+    buy:4.53,
+    sell:19.99,
+    shipping:3,
+    fees:2,
+    source:"TVCMall",
+    url:"https://www.google.com/search?q=magnetischer+Handyk%C3%BChler",
+    why:"Kleines Produkt mit starkem Demo-Effekt.",
+    ad:"Handy-Temperatur vorher/nachher zeigen"
+  },
+
+  {
+    name:"RGB Gaming-Mauspad XXL",
+    buy:27.44,
+    sell:49.99,
+    shipping:4,
+    fees:3,
+    source:"Amazon / Händler",
+    url:"https://www.amazon.de/s?k=RGB+Gaming+Mauspad+XXL",
+    why:"Große visuelle Fläche und Gaming-Zielgruppe.",
+    ad:"Setup-Transformation in 5 Sekunden"
+  }
+
+];
+
+
+/* NAVIGATION */
+
+function openPage(id,btn){
+
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
+
+  document.getElementById(id)
+    .classList.add("active");
+
+  document.querySelectorAll(".nav button")
+    .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+}
+
+
+/* GELD */
+
+function money(n){
+
+  return new Intl.NumberFormat(
+    "de-DE",
+    {
+      style:"currency",
+      currency:"EUR"
+    }
+  ).format(n);
+
+}
+
+
+/* GEWINN */
+
+function calcProfit(p){
+
+  return p.sell - p.buy - p.shipping - p.fees;
+
+}
+
+
+/* DASHBOARD */
+
+function renderDashboard(){
+
+  document.getElementById("dashRevenue")
+    .textContent = money(state.revenue);
+
+  document.getElementById("dashProfit")
+    .textContent = money(state.profit);
+
+  document.getElementById("dashSales")
+    .textContent = state.sales;
+
+  document.getElementById("dashBudget")
+    .textContent = money(state.budget);
+
+
+  let box =
+    document.getElementById("dashboardProducts");
+
+  box.innerHTML = "";
+
+
+  products.forEach((p,i)=>{
+
+    let profit = calcProfit(p);
+
+    box.innerHTML +=
+      productHTML(p,profit,i);
+
+  });
+
+}
+
+
+/* PRODUKT-KARTE */
+
+function productHTML(p,profit,index){
+
+  return `
+
+  <div class="product">
+
+    <div class="product-head">
+
+      <div>
+
+        <div class="product-name">
+          ${p.name}
+        </div>
+
+        <br>
+
+        <span class="badge">
+          ${p.source}
+        </span>
+
+      </div>
+
+      <div class="score">
+        ${money(profit)}
+      </div>
+
+    </div>
+
+
+    <div class="
